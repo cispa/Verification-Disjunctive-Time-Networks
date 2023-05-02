@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+clock x,y;
+
+bool reached[7]={false,false,false,false,false,false,false};
+
+void set_reached(int i){
+
+reached[i]=true;
+}
+</declaration>
+	<template>
+		<name x="5" y="5">Template</name>
+		<declaration>// Place local declarations here.
+clock x,y;</declaration>
+		<location id="id0" x="-714" y="-263">
+		</location>
+		<location id="id1" x="-722" y="-561">
+		</location>
+		<location id="id2" x="-1003" y="-535">
+			<label kind="invariant" x="-1013" y="-518">x&lt;=1</label>
+		</location>
+		<location id="id3" x="-1156" y="-654">
+			<name x="-1166" y="-688">q0</name>
+		</location>
+		<location id="id4" x="-391" y="-280">
+			<label kind="invariant" x="-401" y="-263">x&lt;=1</label>
+		</location>
+		<location id="id5" x="-144" y="-289">
+			<name x="-154" y="-323">q1</name>
+		</location>
+		<location id="id6" x="-484" y="-569">
+		</location>
+		<location id="id7" x="-144" y="-586">
+		</location>
+		<location id="id8" x="76" y="-595">
+		</location>
+		<location id="id9" x="263" y="-603">
+		</location>
+		<location id="id10" x="493" y="-612">
+		</location>
+		<location id="id11" x="663" y="-612">
+		</location>
+		<location id="id12" x="663" y="-816">
+		</location>
+		<location id="id13" x="484" y="-833">
+		</location>
+		<location id="id14" x="212" y="-850">
+		</location>
+		<location id="id15" x="-17" y="-850">
+		</location>
+		<location id="id16" x="-204" y="-850">
+		</location>
+		<location id="id17" x="-408" y="-850">
+		</location>
+		<location id="id18" x="-816" y="-850">
+			<name x="-892" y="-875">q_final</name>
+		</location>
+		<location id="id19" x="-892" y="42">
+			<label kind="invariant" x="-902" y="59">x&lt;=1</label>
+		</location>
+		<location id="id20" x="-714" y="119">
+			<label kind="invariant" x="-724" y="136">x&lt;=1</label>
+		</location>
+		<location id="id21" x="-484" y="127">
+			<label kind="invariant" x="-494" y="144">x&lt;=1</label>
+		</location>
+		<location id="id22" x="-382" y="-34">
+			<label kind="invariant" x="-392" y="-17">x&lt;=1</label>
+		</location>
+		<location id="id23" x="-1079" y="-170">
+			<label kind="invariant" x="-1089" y="-153">x&lt;=1</label>
+		</location>
+		<location id="id24" x="-1241" y="-93">
+		</location>
+		<location id="id25" x="-952" y="221">
+		</location>
+		<location id="id26" x="-663" y="323">
+		</location>
+		<location id="id27" x="-416" y="280">
+		</location>
+		<location id="id28" x="-212" y="136">
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id28"/>
+			<label kind="guard" x="-364" y="17">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-364" y="51">set_reached(5)</label>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id27"/>
+			<label kind="guard" x="-466" y="169">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-466" y="203">set_reached(4)</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id26"/>
+			<label kind="guard" x="-688" y="187">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-688" y="221">set_reached(3)</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id25"/>
+			<label kind="guard" x="-922" y="97">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-922" y="131">set_reached(2)</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="guard" x="-1223" y="-165">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-1223" y="-131">set_reached(1)</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id0"/>
+			<nail x="-977" y="-153"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id23"/>
+			<label kind="guard" x="-976" y="-318">x==1</label>
+			<label kind="assignment" x="-976" y="-284">x=0</label>
+			<nail x="-994" y="-306"/>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id0"/>
+			<nail x="-433" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id22"/>
+			<label kind="guard" x="-696" y="-216">x==1</label>
+			<label kind="assignment" x="-696" y="-182">x=0</label>
+			<nail x="-493" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id0"/>
+			<nail x="-501" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id21"/>
+			<label kind="guard" x="-696" y="-161">x==1</label>
+			<label kind="assignment" x="-696" y="-127">x=0</label>
+			<nail x="-578" y="8"/>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id0"/>
+			<nail x="-654" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id20"/>
+			<label kind="guard" x="-714" y="-199">x==1</label>
+			<label kind="assignment" x="-714" y="-165">x=0</label>
+			<nail x="-714" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id0"/>
+			<nail x="-773" y="-51"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id19"/>
+			<label kind="guard" x="-849" y="-225">x==1</label>
+			<label kind="assignment" x="-849" y="-191">x=0</label>
+			<nail x="-867" y="-119"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id18"/>
+			<label kind="guard" x="-679" y="-888">reached[6]==true</label>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id17"/>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-186" y="-884">reached[5]==true</label>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id15"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id14"/>
+			<label kind="guard" x="230" y="-875">reached[4]==true</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id13"/>
+			<nail x="459" y="-833"/>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id12"/>
+			<label kind="guard" x="663" y="-748">reached[3]==true</label>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id11"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id10"/>
+			<label kind="guard" x="281" y="-641">reached[2]==true</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id9"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-126" y="-624">reached[1]==true</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-704" y="-599">reached[0]==true</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id7"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-1088" y="-620">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-1156" y="-544">set_reached(0)</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-323" y="-323">y&gt;=10 and x&lt;=1</label>
+			<label kind="assignment" x="-373" y="-284">set_reached(6)</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id0"/>
+			<nail x="-518" y="-229"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-586" y="-391">x==1</label>
+			<label kind="assignment" x="-578" y="-348">x=0</label>
+			<nail x="-569" y="-365"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<nail x="-841" y="-297"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-816" y="-391">x==1</label>
+			<label kind="assignment" x="-841" y="-425">x=0</label>
+			<nail x="-833" y="-391"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Process1 = Template();
+Process2= Template();
+Process3=Template();
+Process4=Template();
+Process5=Template();
+Process6=Template();
+Process7=Template();
+Process8=Template();
+// List one or more processes to be composed into a system.
+//system Process1;
+system Process1, Process2, Process3,Process4, Process5, Process6,Process7,Process8;
+//system Process1, Process2, Process3,Process4;</system>
+	<queries>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Process1.q_final</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
