@@ -25,11 +25,11 @@ support
 - Checking arbitrary properties, only reachability is supported directly. If a
   user wants to verify other properties of the system, she can do so by
   encoding the summary automaton into a different tool supporting verification
-  timed automata, e.g. [UPAAL][UPAAL].
+  timed automata, e.g. [UPAAL](https://uppaal.org/).
 
 - Output of a summary automaton in a comprehensible format. Currently, summary
   automata are represented in the internal Python format. A user needs to
-  manually encode them into, for example, the [UPAAL][UPAAL] format if
+  manually encode them into, for example, the [UPAAL](https://uppaal.org/) format if
   she wants to check advanced properties of a system.
 
 ## Usage
@@ -175,7 +175,7 @@ An output format has not been implemented yet. You will have to use the encoding
 of the summary automaton and translate it manually to the desired output format.
 
 We have already translated the systems used in the presented benchmarks to
-[UPAAL][UPAAL], more details will be explained in the ["Benchmarks" section](#benchmarks).
+[UPAAL](https://uppaal.org/), more details will be explained in the ["Benchmarks" section](#benchmarks).
 
 ## Benchmarks
 
@@ -183,7 +183,7 @@ The paper presents a small benchmark suite, comparing the time it took to check
 reachability in the cutoff system against the time it took to construct the
 summary automaton and check properties on the automaton.
 
-For the benchmarks presented in the paper [UPAAL][UPAAL] version `4.1.26-1` has
+For the benchmarks presented in the paper [UPAAL](https://uppaal.org/) version `4.1.26-1` has
 been used. We also provide the manual translations to the UPAAL specific input
 format. They can be found in the folder [`bechmarks`](./benchmarks/).
 
@@ -207,7 +207,7 @@ The paper presents two classes of benchmarks:
 
 ### Executing the UPAAL files
 
-If you have [UPAAL][UPAAL] along with the provided CLI interface installed,
+If you have [UPAAL](https://uppaal.org/) along with the provided CLI interface installed,
 checking the properties explained in the paper can performed by executing:
 
 ```bash
@@ -215,4 +215,3 @@ verifyta -u -s <path-to-uppaal-xml-file>
 ```
 
 [paper]:[TODO]
-[UPAAL]:[https://uppaal.org/]
