@@ -4,7 +4,7 @@ This project is designed to check properties of networks of
 timed automata guarded with disjunctive location guards. For that purpose, a
 **Summary Automaton** will be computed with a language equivalent to a template
 in a network. The main ideas implemented here are described in the
-paper [here][paper].
+paper [here](http://arxiv.org/abs/2305.07295).
 
 In summary, properties of a network of timed automata can be checked on the
 single summary automaton instead of checking them in a cutoff system (which are
@@ -98,7 +98,7 @@ A TA consist of :
   $< \infty$, does not limit the clock valuations. This representation has been
   designed with Difference Bound Matrices (DBMs) in mind, as they are used in
   the underlying zone graph exploration. More details can be found in the
-  [paper][paper].
+  [paper](http://arxiv.org/abs/2305.07295).
 
 - Transitions, encoded as a Dict mapping from transition names to dict with the
   following entries:
@@ -213,5 +213,3 @@ checking the properties explained in the paper can performed by executing:
 ```bash
 verifyta -u -s <path-to-uppaal-xml-file>
 ```
-
-[paper]:[TODO]
