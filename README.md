@@ -42,7 +42,7 @@ Alternatively, you can also use the provided Dockerfile. To execute the image
 use:
 
 ```bash
-docker run ghcr.io/splgb/verification-disjunctive-time-networks:latest
+docker run ghcr.io/pleich/verification-disjunctive-time-networks:latest
 ```
 
 By default, it will execute the Benchmarks described in the paper and output
@@ -50,7 +50,7 @@ the runtime statistics. If you would like to interact with the program
 interactively, use:
 
 ```bash
-docker run --entrypoint python -it ghcr.io/splgb/verification-disjunctive-time-networks:latest
+docker run --entrypoint python -it ghcr.io/pleich/verification-disjunctive-time-networks:latest
 ```
 
 to obtain an interactive Python shell running in the container. To execute the
