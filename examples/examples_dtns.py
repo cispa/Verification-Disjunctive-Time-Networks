@@ -8,7 +8,7 @@
     you don't have to.
 
     We plan to add support for text based input formats that are easier to write
-    and check and possibly make it compatible with other tools such as Upaal.
+    and check and possibly make it compatible with other tools such as UPPAAL.
 """
 
 from dbm.bound import Bound

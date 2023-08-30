@@ -17,35 +17,6 @@ from examples.examples_minreach import star_4, star_5, star_6, star_7, star_8  #
 def main():
     print("Starting to execute benchmarks ...\n")
 
-    print("Starting Summary Automaton benchmark ...")
-    print("GCS(3) without invariants:")
-    start_time = time.process_time()
-    alg = DTNMinus(gcs_3)
-    alg.get_summary_automaton()
-    print("Computed summary automaton successfully.")
-    print(f"Total CPU time: {time.process_time() - start_time}s\n")
-
-    print("GCS(4) without invariants:")
-    start_time = time.process_time()
-    alg = DTNMinus(gcs_4)
-    alg.get_summary_automaton()
-    print("Computed summary automaton successfully.")
-    print(f"Total CPU time: {time.process_time() - start_time}s\n")
-
-    print("GCS(3) with invariants:")
-    start_time = time.process_time()
-    alg = DTNWithInv(gcs_3)
-    print(f"Summary automaton is floodable: {alg.check_valid_summary_automaton()}")
-    print(f"Total CPU time: {time.process_time() - start_time}s\n")
-
-    print("GCS(4) with invariants:")
-    start_time = time.process_time()
-    alg = DTNWithInv(gcs_4)
-    print(f"Summary automaton is floodable: {alg.check_valid_summary_automaton()}")
-    print(f"Total CPU time: {time.process_time() - start_time}s\n")
-
-    print("\n\n\n")
-
     print("Starting MinReach benchmark...")
     print("MinReach for Star(4):")
     start_time = time.process_time()
@@ -85,6 +56,35 @@ def main():
         alg.get_summary_automaton()
         print("Computed summary automaton successfully.")
         print(f"Total CPU time: {time.process_time() - start_time}s\n")
+
+    print("\n\n\n")
+
+    print("Starting Summary Automaton benchmark ...")
+    print("GCS(3) without invariants:")
+    start_time = time.process_time()
+    alg = DTNMinus(gcs_3)
+    alg.get_summary_automaton()
+    print("Computed summary automaton successfully.")
+    print(f"Total CPU time: {time.process_time() - start_time}s\n")
+
+    print("GCS(3) with invariants:")
+    start_time = time.process_time()
+    alg = DTNWithInv(gcs_3)
+    print(f"Summary automaton is floodable: {alg.check_valid_summary_automaton()}")
+    print(f"Total CPU time: {time.process_time() - start_time}s\n")
+
+    print("GCS(4) without invariants:")
+    start_time = time.process_time()
+    alg = DTNMinus(gcs_4)
+    alg.get_summary_automaton()
+    print("Computed summary automaton successfully.")
+    print(f"Total CPU time: {time.process_time() - start_time}s\n")
+
+    print("GCS(4) with invariants:")
+    start_time = time.process_time()
+    alg = DTNWithInv(gcs_4)
+    print(f"Summary automaton is floodable: {alg.check_valid_summary_automaton()}")
+    print(f"Total CPU time: {time.process_time() - start_time}s\n")
 
 
 if __name__ == "__main__":

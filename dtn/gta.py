@@ -7,7 +7,7 @@
 #   - check all implicit assertions between lists (e.g. name of
 #     locations in a transition exist)
 #   - parse transitions from a file based representation (similar to
-#     Upaal ?)
+#     UPPAAL ?)
 
 import math
 import copy
