@@ -1,26 +1,42 @@
-import copy
-from typing import List
-from dbm.bound import *
-from dbm.constraint import *
+""" This file contains a simple implementation of Difference Bound Matrices
+    (DBMs) and operations on them.
 
-# Possible improvements:
-#   Currently, canonicalization will always execute the full Floyd Warshall
-#   algorithm rather than checking for which entries that might be necessary.
-#   More can be found in
-#       https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
+    More can be found in
+        https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
+"""
+
+# * IMPROVEMENT:
+#       Currently, canonicalization will always execute the full Floyd Warshall
+#       algorithm rather than checking for which entries that might be
+#       necessary. See
+#           https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
+
+import copy
+from typing import List, Dict, Optional
+from dbm.bound import Bound, BoundType
+from dbm.constraint import Constraint, ZERO
 
 
 class DBM:
     """DBM represents a difference bound matrix and allows for operations on
-    them."""
+    them.
+    """
 
-    def __init__(self, clocks: List[str], m=None) -> None:
-        """initializes the DBM by allowing an arbitrary clock valuation with all
-        clocks being synchronized"""
-        assert not (ZERO in clocks)
+    def __init__(
+        self, clocks: List[str], m: Optional[List[List["Bound"]]] = None
+    ) -> None:
+        """initializes the DBM by allowing an arbitrary clock valuation with
+        all clocks being synchronized
+
+        Args:
+            clocks (List[str]): names of the clocks
+            m (Optional[List["Bound"]]): optional matrix of bounds to
+                initialize the DBM with
+        """
+        assert ZERO not in clocks
 
         # add the zero clock to the list of clocks
-        self.clocks = {ZERO: 0}
+        self.clocks: Dict[str, int] = {ZERO: 0}
         # index clocks
         for i in range(len(clocks)):
             self.clocks[clocks[i]] = i + 1
@@ -34,15 +50,15 @@ class DBM:
             return
 
         # initialize DBM matrix
-        m = []
+        self.m = []
         for i in range(len(self.clocks)):
-            m.append([])
+            self.m.append([])
             for j in range(len(self.clocks)):
                 if j == 0 and i != 0:
-                    m[i].append(Bound.unbounded())
+                    self.m[i].append(Bound.unbounded())
                 else:
-                    m[i].append(Bound.less_equal(0))
-        self.m = m
+                    self.m[i].append(Bound.leq(0))
+
         self.__is_canonical = True
 
     def __str__(self) -> str:
@@ -58,8 +74,10 @@ class DBM:
     def __repr__(self) -> str:
         return self.__str__()
 
-    def __eq__(self, other: 'DBM') -> bool:
-        """Implements equality. Two DBMs are considered equal if they have the same clocks and the entries are the same (in their canonical form)"""
+    def __eq__(self, other) -> bool:
+        """Implements equality. Two DBMs are considered equal if they have the
+        same clocks and the entries are equal (in their canonical form)
+        """
         if self.clocks != other.clocks:
             return False
 
@@ -70,13 +88,14 @@ class DBM:
 
     def __get_clock_names(self) -> List[str]:
         """Get the names of clocks excluding the 0 clock"""
-        clocks = [key for key in self.clocks.keys()]
+        clocks = list(self.clocks)
         clocks.remove(ZERO)
         return clocks
 
     def __check_constraints_satisfiable(self) -> bool:
         """Check if constraints in the DBM are satisfiable or if the set of
-        clock valuations that satisfy this DBM is empty"""
+        clock valuations that satisfy this DBM is empty
+        """
 
         # Check for negative self-loops indicating a negative loop.
         # For self loops to be negative, the DBM has to be in the
@@ -89,25 +108,28 @@ class DBM:
 
         for i in range(len(self.m)):
             for j in range(len(self.m)):
-                if i == j:
-
-                    if (self.m[i][i].get_value() < 0):
-                        self.__is_empty = True
-                        return False
+                if (i == j) and (self.m[i][i].get_value() < 0):
+                    self.__is_empty = True
+                    return False
                 elif j < i:
-                    if self.m[i][j] < - self.m[j][i]:
+                    if self.m[i][j] < -self.m[j][i]:
                         self.__is_empty = True
                         return False
-                    # Check whether both are strictly less bounds and therefore contradicting
-                    elif self.m[i][j] == - self.m[j][i]:
+                    # Check whether both are strictly less bounds and therefore
+                    # contradicting
+                    elif self.m[i][j] == -self.m[j][i]:
                         if self.m[i][j].ty == BoundType.LESS:
                             self.__is_empty = True
                             return False
         return True
 
     def canonicalize(self) -> bool:
-        """Canonicalize the DBM by tightening all constraints and checks whether\
-            the DBM is non-empty.Returns False if the DBM is empty"""
+        """Canonicalize the DBM by tightening all constraints and
+        check whether the DBM is satisfiable.
+
+        Returns:
+            False if the DBM is empty
+        """
         # See https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
         if self.__is_empty:
             return False
@@ -123,8 +145,8 @@ class DBM:
         return self.canonicalize()
 
     def reset(self, clocks: List[str]) -> None:
-        """Resets the given list of clocks"""
-        if not (self.__is_canonical):
+        """Resets all given clocks to 0"""
+        if not self.__is_canonical:
             self.canonicalize()
 
         for clock in clocks:
@@ -132,17 +154,18 @@ class DBM:
             for i in range(len(self.m)):
                 self.m[c][i] = self.m[0][i]
                 self.m[i][c] = self.m[i][0]
-            self.m[0][c] = Bound.less_equal(0)
-            self.m[c][0] = Bound.less_equal(0)
+            self.m[0][c] = Bound.leq(0)
+            self.m[c][0] = Bound.leq(0)
 
     def delay(self) -> None:
         """Delays all clocks by setting their upper bound to infinity."""
         for i in range(1, len(self.m)):
             self.m[i][0] = Bound.unbounded()
 
-    def intersect(self, other: 'DBM') -> 'DBM':
-        """intersect computes the intersection between two DBMs"""
-        # Defined in https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
+    def intersect(self, other: "DBM") -> "DBM":
+        """Computes the intersection between two DBMs"""
+        # Defined in
+        #   https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
         assert self.clocks == other.clocks
 
         self.canonicalize()
@@ -162,10 +185,10 @@ class DBM:
 
         return DBM(self.__get_clock_names(), m)
 
-    def and_constr(self, constr: 'Constraint') -> bool:
+    def and_constr(self, constr: "Constraint") -> None:
         """ands a constraint to the DBM"""
-        # Defined in https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
-        # TODO: Improvement: speedup emptiness by checking here
+        # Defined in
+        #   https://www.seas.upenn.edu/~lee/09cis480/papers/by-lncs04.pdf
         i = self.clocks[constr.get_c_1()]
         j = self.clocks[constr.get_c_2()]
 
@@ -181,8 +204,8 @@ def floyd_warshall(dist):
         for i in range(len(dist)):
             # Pick all vertices as destination for the above picked source
             for j in range(len(dist)):
-                # If vertex k is on the shortest path from i to j, then update
+                # if vertex k is on the shortest path from i to j, then update
                 # the value of dist[i][j]
-                if (dist[i][k] + dist[k][j] < dist[i][j]):
+                if dist[i][k] + dist[k][j] < dist[i][j]:
                     dist[i][j] = dist[i][k] + dist[k][j]
     return dist

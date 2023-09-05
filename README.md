@@ -5,9 +5,12 @@ timed automata guarded with disjunctive location guards. For that purpose, a
 **Summary Automaton** will be computed. The main ideas are described in the
 corresponding [paper](http://arxiv.org/abs/2305.07295).
 
-In summary, properties of a network of timed automata can be checked on the
-single summary automaton instead of checking them in a cutoff system (which is
-substantially larger).
+This repository contains an implementation which for a $DTN$ given in the form
+of a single guarded Timed Automaton (gTA) with a single clock will compute a
+**Summary Automaton**. This summary automaton is then proven in the paper to be
+language equivalent to the $DTN$ it represents (under certain conditions).
+Hence, it can be used to verify properties of the $DTN$ instead of the product
+system.
 
 The program can check for the existence of **flooding paths** for automata
 with a single clock and invariants on states appearing as location guards. If
@@ -60,13 +63,14 @@ main function use:
 exec(open("main.py").read())
 ```
 
+# TODO: --extended flag
+
 ### Input Format
 
-Currently, the Timed Automata (TA) templates must be manually encoded into a
-Dict-based representation. You can find some examples in
-[`./examples/example_tas.py`](./examples/example_tas.py).
-
-A TA consist of :
+Currently, the gTA definition must be manually encoded into a
+`Dict`-based representation. Some examples can be found in
+[`./examples/example_tas.py`](./examples/example_tas.py). We will explain the
+input in the following section. A gTA consist of:
 
 - A set of locations, encoded as a list of strings:
 
@@ -140,25 +144,25 @@ A TA consist of :
         }
   ```
 
-- A list of clocks appearing in the TA (the name `"0"` is reserved for the
-  constantly zero clock). By default, the TA will assume a single clock
+- A list of clocks appearing in the gTA (the name `"0"` is reserved for the
+  constantly zero clock). By default, the gTA will assume a single clock
   named `"x"`.
 
   ```python
   clocks = ["x", "y"]
   ```
 
-Then a TA object can be constructed using
+Then a gTA object can be constructed using
 `TA(locations, init_states, transitions, invariants, clocks)`.
 
 ### Constructing a Summary Automaton
 
-To construct a summary automaton from a TA, you can construct an object of
-either `DTNMinus` or `DTNWithInv`. `DTNMinus` should be used with TAs that
-belong to the $DTN^-$ class, so TAs that do not have invariants on locations
+To construct a summary automaton from a gTA, you can construct an object of
+either `DTNMinus` or `DTNWithInv`. `DTNMinus` should be used with gTAs that
+belong to the $DTN^-$ class, so gTAs that do not have invariants on locations
 appearing in location guards.
 
-`DTNWithInv` should be used only with TAs with a single clock, but allows for
+`DTNWithInv` should be used only with gTAs with a single clock, but allows for
 invariants in states appearing in location guards.
 
 Both classes take an object of type `TA` as input and provide you with the
@@ -175,7 +179,7 @@ An output format has not been implemented yet. You will have to use the encoding
 of the summary automaton and translate it manually to the desired output format.
 
 We have already translated the systems used in the presented benchmarks to
-[UPAAL](https://uppaal.org/), more details can be found in the
+[UPAAL](https://uppaal.org/), more details can be found in thehe 
 ["Benchmarks" section](#benchmarks).
 
 ## Benchmarks
@@ -200,7 +204,7 @@ The paper presents two classes of benchmarks:
   [`./benchmarks/minreach-vs-upaal`](./benchmarks/minreach-vs-uppaal/).
 
 - Computation of the Summary Automaton & checking properties: The program is
-  used to compute the summary automaton, the properties can then be checked with
+  used to compute the summary automaton, the properties can then be checked withhe 
   UPAAL. The relevant files can be found in
   [`./benchmarks/gossip-clock-sync/`](./benchmarks/gossip-clock-sync/). The files
   ending with `summaryTA` indicate that they use the summary automaton
