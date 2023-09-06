@@ -54,7 +54,7 @@ Alternatively, you can also use the provided Dockerfile. To execute the image
 use:
 
 ```bash
-docker run ghcr.io/pleich/verification-disjunctive-time-networks:latest
+docker run ghcr.io/cispa/verification-disjunctive-time-networks:latest
 ```
 
 By default, it will execute the benchmarks described in the paper and output
@@ -62,13 +62,13 @@ the runtime statistics. If you would like to use the program
 interactively, use:
 
 ```bash
-docker run --entrypoint python -it ghcr.io/pleich/verification-disjunctive-time-networks:latest
+docker run --entrypoint python -it ghcr.io/cispa/verification-disjunctive-time-networks:latest
 ```
 
 to start an interactive Python shell running in the container. To execute the
 main function use:
 
-```pythonare
+```python
 exec(open("main.py").read())
 ```
 
