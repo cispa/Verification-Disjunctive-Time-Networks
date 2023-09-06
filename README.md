@@ -39,7 +39,16 @@ not support
 
 ### Requirements
 
-This project requires Python `>=3.8`.
+#### Executing Locally
+
+This project only requires Python `>=3.9`, all other modules are included or
+part of the Python standard library. To execute the program use
+
+```bash
+python3 main.py
+```
+
+#### Docker
 
 Alternatively, you can also use the provided Dockerfile. To execute the image
 use:
