@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// TODO:
+// at the moment the specifications allow to say that:
+// - it is always possible to reach a synchronization state
+// - once clocks are synchronized, they always can return to a synchronized state
+//
+// it is not clear how to "bound" the interval in which two clocks can be un-synchronized (given the restrictive syntax of Uppaal specifications);
+// we should also see how it scales to a cutoff size and double check the model actually falls in the family of disjunctive timed networks
+
+// SIZE: number of copies in the system
+const int SIZE = 1;
+clock g;
+// PERIOD: discrete clock period; the clock cycles from 0 till PERIOD-1, than it goes back to 0
+const int PERIOD = 4;
+
+// tick: it stores, for each process id, the current clock value
+meta int[0,PERIOD] tick[SIZE];
+
+// high: an array storing, for each process id, whether it is currently synchronized with the clock source (high[id] = true) or not (high[id] = false);
+//       this array is used to encode the disjunctive guard, since Uppaal does not allow to refer to other process locations
+int synched[SIZE]={1};
+
+
+
+void inc_tick(int[0,SIZE] id) {
+    tick[id] = (tick[id] + 1) % PERIOD;
+}
+
+int[0,PERIOD] get_tick(int[0,SIZE] id) {
+    return tick[id];
+}
+
+void set_tick(int[0,SIZE] id, int[0,PERIOD] value) {
+    tick[id] = value;
+}
+
+
+int get_synched(int[0,SIZE] id) {
+    return synched[id];
+}
+
+void set_synched(int [0,SIZE] id, bool is_synched) {
+    synched[id] = is_synched;
+}
+
+int num_synched() {
+    int i=0, res=0;
+
+    for (i=0; i&lt;SIZE; i++) {
+        res = res + synched[i];
+    } 
+
+    return res;
+}</declaration>
+	<template>
+		<name>GTPUser</name>
+		<parameter>int id</parameter>
+		<declaration>// sync_proc: it stores the identify of the process from which it receives a message, or -1 
+//int sync_proc = -1;
+
+// ph: it represents the phase of the oscillator; in theory the oscillator should fire when its phase equals 1, but it may be the case that the oscillator 
+//     drifts (e.g. it fires too early, or too low); we model this by assuming that the phase is a precise clock (no drifts) but the oscillator may fire
+//     when ph == 1, ph &lt; 1, or ph &gt; 1, and react accordingly
+clock ph;
+
+
+//meta int[0, PERIOD] tick = 0;
+
+// Open questions:
+// 
+// 1. number of actual locations is not the visible ones, but we must multiply it by the number of values of high[id] times the values of tick[id]
+// 2. we use the array high[sync_id] to check whether the quality of clock of sync_id is better than the one in the local process; this is like saying that we abstract from the metric 
+//    for judging the quality of a timestamp, assuming that such metric is able to distinguish (most of the times?) between clocks with good timestamps (i.e. synchronized with the Controller)
+//    and clocks with bad timestamps
+// 3. 
+
+
+</declaration>
+		<location id="id0" x="595" y="85">
+			<name x="585" y="51">L3</name>
+			<label kind="invariant" x="585" y="102">ph &lt;=4</label>
+		</location>
+		<location id="id1" x="578" y="-289">
+			<name x="568" y="-323">H3</name>
+		</location>
+		<location id="id2" x="-739" y="340">
+		</location>
+		<location id="id3" x="-909" y="-170">
+		</location>
+		<location id="id4" x="246" y="59">
+			<name x="236" y="25">L2</name>
+			<label kind="invariant" x="263" y="76">ph &lt;= 4</label>
+		</location>
+		<location id="id5" x="-34" y="51">
+			<name x="-44" y="17">L1</name>
+			<label kind="invariant" x="-76" y="68">ph &lt;= 4</label>
+		</location>
+		<location id="id6" x="-382" y="51">
+			<name x="-392" y="17">L0</name>
+			<label kind="invariant" x="-450" y="59">ph &lt;= 4</label>
+		</location>
+		<location id="id7" x="204" y="-289">
+			<name x="194" y="-323">H2</name>
+		</location>
+		<location id="id8" x="-51" y="-289">
+			<name x="-61" y="-323">H1</name>
+		</location>
+		<location id="id9" x="-391" y="-289">
+			<name x="-401" y="-323">H0</name>
+		</location>
+		<init ref="id9"/>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-705" y="34">g&gt;=6</label>
+			<label kind="assignment" x="-790" y="102">set_tick(id, 3), set_synched(id, true),   ph := 0</label>
+			<nail x="280" y="8"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-781" y="-420">g&gt;=6</label>
+			<label kind="assignment" x="-781" y="-386">set_tick(id, 2), set_synched(id, true),ph := 0</label>
+			<nail x="68" y="-722"/>
+			<nail x="501" y="-714"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-364" y="-548">ph==2</label>
+			<label kind="assignment" x="-364" y="-514">inc_tick(id), ph := 0, set_synched(id, true)</label>
+			<nail x="578" y="-518"/>
+			<nail x="-382" y="-510"/>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id6"/>
+			<label kind="guard" x="-381" y="280">ph &gt;= 1</label>
+			<label kind="assignment" x="-381" y="314">inc_tick(id), ph := 0, set_synched(id, false)</label>
+			<nail x="612" y="314"/>
+			<nail x="-399" y="314"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id0"/>
+			<label kind="guard" x="222" y="-297">g&gt;=0 and ph&lt;2</label>
+			<label kind="assignment" x="222" y="-263">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="314" y="-238"/>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id0"/>
+			<label kind="guard" x="222" y="-123">g&gt;=0 and ph&gt;2</label>
+			<label kind="assignment" x="222" y="-89">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="204" y="-229"/>
+			<nail x="484" y="51"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id6"/>
+			<label kind="guard" x="596" y="-255">g&gt;=0 and ph&lt;2</label>
+			<label kind="assignment" x="596" y="-221">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="688" y="-153"/>
+			<nail x="705" y="297"/>
+			<nail x="-459" y="280"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id6"/>
+			<label kind="guard" x="596" y="-293">g&gt;=0 and ph&gt;2</label>
+			<label kind="assignment" x="596" y="-259">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="731" y="-229"/>
+			<nail x="765" y="255"/>
+			<nail x="-416" y="255"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id0"/>
+			<label kind="guard" x="264" y="38">ph&gt;=1</label>
+			<label kind="assignment" x="264" y="72">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id1"/>
+			<label kind="guard" x="222" y="-323">ph==2</label>
+			<label kind="assignment" x="222" y="-289">inc_tick(id), ph := 0, 
+set_synched(id, true)</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-629" y="-8">g&gt;=0</label>
+			<label kind="assignment" x="-799" y="170">set_tick(id,0),set_synched(id,true), ph := 0</label>
+			<nail x="-416" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-697" y="8">g&gt;=2</label>
+			<label kind="assignment" x="-790" y="59">set_tick(id, 1), set_synched(id, true),   ph := 0</label>
+			<nail x="-195" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-789" y="16">g&gt;=4</label>
+			<label kind="assignment" x="-782" y="127">set_tick(id, 2), set_synched(id, true),   ph := 0</label>
+			<nail x="-204" y="8"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id2"/>
+			<nail x="-603" y="102"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id6"/>
+			<nail x="-620" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id3"/>
+			<nail x="-629" y="-212"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id9"/>
+			<nail x="-586" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-781" y="-374">g&gt;=4</label>
+			<label kind="assignment" x="-781" y="-340">set_tick(id, 2), set_synched(id, true),ph := 0</label>
+			<nail x="-272" y="-629"/>
+			<nail x="85" y="-629"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-781" y="-357">g&gt;=2</label>
+			<label kind="assignment" x="-781" y="-323">set_tick(id, 1), set_synched(id, true),  ph := 0</label>
+			<nail x="-484" y="-595"/>
+			<nail x="-93" y="-595"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id9"/>
+			<label kind="guard" x="-755" y="-578">g&gt;=0</label>
+			<label kind="assignment" x="-755" y="-544">set_tick(id, 0),  set_synched(id, true),ph:=0</label>
+			<nail x="-773" y="-527"/>
+			<nail x="-416" y="-561"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-51" y="-102">g&gt;=0 and ph &lt;2</label>
+			<label kind="assignment" x="-42" y="-59">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="-34" y="-212"/>
+			<nail x="144" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-544" y="-161">g&gt;=0 and ph &lt;2</label>
+			<label kind="assignment" x="-408" y="-93">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="-391" y="-221"/>
+			<nail x="-110" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="guard" x="34" y="34">ph &gt;= 1</label>
+			<label kind="assignment" x="34" y="59">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-272" y="25">ph &gt;= 1</label>
+			<label kind="assignment" x="-280" y="51">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id4"/>
+			<label kind="guard" x="42" y="-178">g&gt;=0 and ph&gt;2</label>
+			<label kind="assignment" x="76" y="-153">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="-8" y="-263"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-374" y="-255">g&gt;=0 and ph &gt;2</label>
+			<label kind="assignment" x="-348" y="-238">inc_tick(id), ph := 0, 
+set_synched(id, false)</label>
+			<nail x="-340" y="-272"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-34" y="-357">ph == 2</label>
+			<label kind="assignment" x="-34" y="-331">inc_tick(id), ph := 0, 
+set_synched(id, true)</label>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="guard" x="-340" y="-348">ph == 2</label>
+			<label kind="assignment" x="-348" y="-331">inc_tick(id), ph := 0, 
+set_synched(id, true)</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+u0 = GTPUser(0);
+
+
+// List one or more processes to be composed into a system.
+
+system u0;</system>
+	<queries>
+		<query>
+			<formula>get_synched(0) == true --&gt; get_synched(0) == false
+			</formula>
+			<comment>Phi_3 : it does hold
+			</comment>
+		</query>
+		<query>
+			<formula>get_synched(0) == false --&gt; get_synched(0) == true
+			</formula>
+			<comment>Phi_4: this does not hold
+			</comment>
+		</query>
+		<query>
+			<formula>get_synched(0) == true --&gt; get_synched(0) == true
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>get_synched(0) == false --&gt; get_synched(0) == false
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>u0.H0--&gt;u0.H0
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
