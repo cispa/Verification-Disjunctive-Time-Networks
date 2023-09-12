@@ -50,7 +50,7 @@ Note however, that the project currently can only be used to calculate minimal
 reachability times and check for the existence of lassos.
 
 To check the properties described in the paper benchmark section, you must
-install [UPPAAL website](https://uppaal.org/downloads/).
+install [UPPAAL](https://uppaal.org/downloads/).
 Note that you will have to download and install UPPAAL yourself. We cannot
 distribute it nor include it in our Dockerfiles. Please follow the instructions
 on the [UPPAAL website](https://uppaal.org/downloads/).
@@ -99,7 +99,7 @@ exec(open("main.py").read())
 
 The paper presents a small benchmark suite consisting of two benchmark suits:
 
-- **$MINREACH$ Benchmarks**: The first suite demonstrates the effectiveness of
+- **MINREACH Benchmarks**: The first suite demonstrates the effectiveness of
   our $MINREACH$ algorithm for computing. More details can be found in the
   [$MINREACH$](#minreach) section.
 
