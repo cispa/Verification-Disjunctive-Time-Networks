@@ -55,6 +55,9 @@ Note that you will have to download and install UPPAAL yourself. We cannot
 distribute it nor include it in our Dockerfiles. Please follow the instructions
 on the [UPPAAL website](https://uppaal.org/downloads/).
 
+> **Note:**
+> To use UPPAAL you will need a license. UPPAAL does provide free licenses for academic use which you have to register for [here](https://uppaal.veriaal.dk/academic.html).
+
 For the benchmarks presented in the paper [UPPAAL](https://uppaal.org/) version
 `4.1.26-1` has been used.
 
